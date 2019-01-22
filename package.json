@@ -1,0 +1,24 @@
+{
+  "name": "vue3-multipage",
+  "version": "0.0.1",
+  "description": "VUE multi-page configuration",
+  "main": "index.js",
+  "author": "liangmayong",
+  "license": "UNLICENSED",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whoopschat/vue3-multipage.git"
+  },
+  "bugs": {
+    "url": "https://github.com/whoopschat/vue3-multipage/issues"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "vue3-multipage"
+  ]
+}
