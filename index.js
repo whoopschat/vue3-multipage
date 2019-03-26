@@ -54,9 +54,9 @@ function _getPages(srcPath) {
     return pages;
 }
 
-exports.create = function (srcPath, publicPath) {
+exports.create = function (srcPath, baseUrl) {
     return {
-        publicPath: publicPath || process.env.PUBLIC_PATH || '/',
+        baseUrl: baseUrl || process.env.BASE_URL || process.env.PUBLIC_PATH || '/',
         pages: _getPages(path.join(process.cwd(), srcPath || process.env.SRC_PATH || './src'))
     }
 }
