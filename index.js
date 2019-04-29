@@ -1,37 +1,37 @@
 const fs = require('fs');
 const path = require('path');
 
-function _getFileName(file) {
+function _getFileName(file, path_mode) {
     let dir = path.dirname(file);
     let info = path.parse(file);
     let name = info.name;
     while (dir && dir != '.') {
         info = path.parse(dir);
-        name = info.name + '-' + name
+        name = info.name + (path_mode || process.env.PATH_MODE || '-') + name
         dir = path.dirname(dir);
     }
     return name;
 }
 
-function _getEntryList(srcPath) {
-    let entrysList = [];
-    const recursionFile = (nextPath) => {
-        const fileList = fs.readdirSync(nextPath);
+function _getEntryList(src_path, path_mode) {
+    let entrys_list = [];
+    const recursion = (recursion_path) => {
+        const fileList = fs.readdirSync(recursion_path);
         if (!fileList.length) {
             return;
         }
         fileList.forEach(file => {
-            let template = path.join(nextPath, `./${file}`);
-            let entry = `${template.substr(0, template.lastIndexOf('.'))}.js`;
-            let filename = path.relative(srcPath, template);
+            let template = path.join(recursion_path, `./${file}`);
             let fileStat = fs.statSync(template);
             if (fileStat.isDirectory()) {
-                return recursionFile(template);
+                return recursion(template);
             }
+            let entry = `${template.substr(0, template.lastIndexOf('.'))}.js`;
+            let filename = `${_getFileName(path.relative(src_path, template), path_mode)}.html`;
             if (/\.html$/.test(file) && fileStat.isFile() && fs.existsSync(entry)) {
-                let title = _getFileName(path.relative(srcPath, entry));
+                let title = _getFileName(path.relative(src_path, entry), path_mode);
                 let chunks = ['vendor', 'chunk-vendors', 'chunk-common', title];
-                entrysList.push({
+                entrys_list.push({
                     title,
                     entry,
                     template,
@@ -41,12 +41,12 @@ function _getEntryList(srcPath) {
             }
         });
     }
-    recursionFile(srcPath);
-    return entrysList;
+    recursion(src_path);
+    return entrys_list;
 }
 
-function _getPages(srcPath) {
-    let entrys = _getEntryList(srcPath);
+function _getPages(src_path, path_mode) {
+    let entrys = _getEntryList(src_path, path_mode);
     let pages = {};
     entrys.forEach((entry) => {
         pages[entry.title] = Object.assign({}, entry);
@@ -54,11 +54,15 @@ function _getPages(srcPath) {
     return pages;
 }
 
-exports.create = function (srcPath, baseUrl) {
+function create(src_path, publish_path, path_mode) {
     return {
-        baseUrl: baseUrl || process.env.BASE_URL || process.env.PUBLIC_PATH || '/',
-        pages: _getPages(path.join(process.cwd(), srcPath || process.env.SRC_PATH || './src'))
+        baseUrl: publish_path || process.env.PUBLIC_PATH || './',
+        pages: _getPages(path.join(process.cwd(), src_path || process.env.SRC_PATH || './src'), path_mode)
     }
+}
+
+exports = module.exports = {
+    create
 }
 
 
