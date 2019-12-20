@@ -68,11 +68,11 @@ function _getPages(src_path, path_handle, path_filter) {
     return pages;
 }
 
-function create(src_path, publish_path, path_handle, path_filter) {
-    return {
+function create(src_path, publish_path, path_handle, path_filter, options = {}) {
+    return Object.assign({
         baseUrl: publish_path || './',
         pages: _getPages(path.join(process.cwd(), src_path || './src'), path_handle, path_filter)
-    }
+    }, options)
 }
 
 exports = module.exports = {

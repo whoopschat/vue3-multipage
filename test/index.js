@@ -5,6 +5,8 @@ let config = multipage.create("./test", "./", (filename) => {
     return filename;
 }, (path) => {
     return true;
+}, {
+    // other config
 });
 
 console.log(config);
