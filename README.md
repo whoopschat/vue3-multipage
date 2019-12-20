@@ -12,5 +12,11 @@ VUE multi-page configuration
 const multipage = require('vue3-multipage');
 let srcPath = './src'; // src path
 let publicPath = '/';  // public path
-module.exports = multipage.create(srcPath,publicPath);
+module.exports = multipage.create(srcPath, publicPath, (filename) => {
+    // handle output file name
+    return filename;
+}, (filename) => {
+    // filter file name
+    return true;
+});
 ```
