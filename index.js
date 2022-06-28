@@ -29,6 +29,7 @@ function _getEntryList(src_path, path_handle, path_filter) {
             if (fileStat.isDirectory()) {
                 return recursion(template);
             }
+            let favicon = path.join(recursion_path, `./favicon.ico`);
             let entry = `${template.substr(0, template.lastIndexOf('.'))}.js`;
             if (/\.html$/.test(file) && fileStat.isFile() && fs.existsSync(entry)) {
                 let title = _getFileName(path.relative(src_path, entry));
@@ -50,6 +51,7 @@ function _getEntryList(src_path, path_handle, path_filter) {
                     entry,
                     template,
                     filename,
+                    favicon,
                     chunks,
                 });
             }
