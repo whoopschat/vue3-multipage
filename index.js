@@ -39,9 +39,13 @@ function _getEntryList(src_path, path_handle, path_filter) {
       if (fileStat.isDirectory()) {
         return recursion(template);
       }
-      let favicon = path.join(recursion_path, `./favicon.ico`);
-      if (!fs.existsSync(favicon)) {
-        favicon = undefined;
+      let faviconIco = path.join(recursion_path, `./favicon.ico`);
+      if (!fs.existsSync(faviconIco)) {
+        faviconIco = undefined;
+      }
+      let faviconSvg = path.join(recursion_path, `./favicon.svg`);
+      if (!fs.existsSync(faviconSvg)) {
+        faviconSvg = undefined;
       }
       let entry = `${template.substring(0, template.lastIndexOf('.'))}.js`;
       if (/\.html$/.test(file) && fileStat.isFile() && fs.existsSync(entry)) {
@@ -59,6 +63,7 @@ function _getEntryList(src_path, path_handle, path_filter) {
         }
         let filename = `${title}.html`
         let chunks = ['vendor', 'chunk-vendors', 'chunk-common', title];
+        let favicon = faviconIco || faviconSvg;
         entrys_list.push({
           title,
           entry,
